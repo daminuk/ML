@@ -1,7 +1,9 @@
 #include "network.h"
 
 boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(boost::numeric::ublas::vector<double> input) {
-  // If the input size does not match the networks return an empty vector
+  // Given an input vector feed it through the neural network returning the produced output.
+
+  // If the input size does not match the exepected size we return an empty vector.
   if (input.size() != numberInput) {
     return boost::numeric::ublas::vector<double>();
   }
@@ -11,7 +13,7 @@ boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(boost::nu
   for (auto w : weights) {
     boost::numeric::ublas::vector<double> tmp(w.size1());
 
-    // We manually include the bias unit so to avoid resizing a vector.
+    // We manually include the bias unit to avoid resizing a vector.
     for (int i = 0; i < w.size1(); ++i) {
       // Add bias unit
       tmp[i] = 1.0 * w(i, 0);
@@ -32,6 +34,8 @@ boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(boost::nu
 }
 
 std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogateVector(boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected) {
+  // This function calculate the gradient of the cost function w.r.t network weights using the back propogation algorithm.
+
   // If the input size or output size does not match the networks return an empty vector
   if (input.size() != numberInput ||  expected.size() != numberOutput) {
     return std::vector<boost::numeric::ublas::matrix<double> >();
@@ -96,8 +100,8 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
     delta.push_front(tmp2);
   }
 
+  // Finally we use the above deltas to calculate the gradient w.r.t weights.
   std::vector<boost::numeric::ublas::matrix<double> > Delta;
-  // Finally we use the above deltas to calculate the weight derivates.
   for (int k=0; k < delta.size(); ++k) {
     Delta.push_back(boost::numeric::ublas::outer_prod(delta[k], a[k]));
   }

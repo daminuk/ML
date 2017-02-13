@@ -58,8 +58,74 @@ BOOST_AUTO_TEST_CASE(XOR_test_feed_forward)
 
   network.setWeights(weights);
 
-  BOOST_CHECK(abs(network.feedForwardVector(in1)[0] - expv1[0]) < 0.01);
-  BOOST_CHECK(abs(network.feedForwardVector(in2)[0] - expv2[0]) < 0.01);
-  BOOST_CHECK(abs(network.feedForwardVector(in3)[0] - expv3[0]) < 0.01);
-  BOOST_CHECK(abs(network.feedForwardVector(in4)[0] - expv4[0]) < 0.1);
+  // We test the inputs against the known outputs
+  BOOST_CHECK_SMALL(network.feedForwardVector(in1)[0] - expv1[0], 0.01);
+  BOOST_CHECK_SMALL(network.feedForwardVector(in2)[0] - expv2[0], 0.01);
+  BOOST_CHECK_SMALL(network.feedForwardVector(in3)[0] - expv3[0], 0.01);
+  BOOST_CHECK_SMALL(network.feedForwardVector(in4)[0] - expv4[0], 0.01);
+}
+
+
+BOOST_AUTO_TEST_CASE(XOR_test_train)
+{
+  /* We test if the back propogation implementation by using stochastic gradient descent
+   * to learn the weights for an XOR network.
+   * 
+   * This test may fail if poor initial conditions are randomly selected.
+   */
+
+  boost::numeric::ublas::vector<double> in1(2);
+  in1[0] = 0.0;
+  in1[1] = 0.0;
+
+  boost::numeric::ublas::vector<double> expv1(1);
+  expv1[0] = 0.0;
+
+  boost::numeric::ublas::vector<double> in2(2);
+  in2[0] = 0.0;
+  in2[1] = 1.0;
+
+  boost::numeric::ublas::vector<double> expv2(1);
+  expv2[0] = 1.0;
+
+  boost::numeric::ublas::vector<double> in3(2);
+  in3[0] = 1.0;
+  in3[1] = 0.0;
+
+  boost::numeric::ublas::vector<double> expv3(1);
+  expv3[0] = 1.0;
+
+  boost::numeric::ublas::vector<double> in4(2);
+  in4[0] = 1.0;
+  in4[1] = 1.0;
+
+  boost::numeric::ublas::vector<double> expv4(1);
+  expv4[0] = 0.0;
+
+  std::vector<int> size;
+  size.push_back(2);
+  NeuralNetwork * network = new NeuralNetwork(size, 2, 1);
+  network->initializeRandomWeights();
+
+  StochasticGradientDescent SGD(network, 0.1);
+
+  // We train the network using the above pairs of inputs and expected values.
+  // Note: A criteria for halting the optimization is still needed.
+  for (int i=0; i < 20000; ++i) {
+	SGD.train(in1, expv1);
+	SGD.train(in2, expv2);
+	SGD.train(in3, expv3);
+	SGD.train(in4, expv4);
+  }  
+
+  std::cout << "Output: " << network->feedForwardVector(in1)[0] << " Expected: " << expv1[0] << std::endl;
+  std::cout << "Output: " << network->feedForwardVector(in2)[0] << " Expected: " << expv2[0] << std::endl;
+  std::cout << "Output: " << network->feedForwardVector(in3)[0] << " Expected: " << expv3[0] << std::endl;
+  std::cout << "Output: " << network->feedForwardVector(in4)[0] << " Expected: " << expv4[0] << std::endl;
+
+  // We test the ouput of the newly trained network against known values.
+  BOOST_CHECK_SMALL(network->feedForwardVector(in1)[0] - expv1[0], 0.1);
+  BOOST_CHECK_SMALL(network->feedForwardVector(in2)[0] - expv2[0], 0.1);
+  BOOST_CHECK_SMALL(network->feedForwardVector(in3)[0] - expv3[0], 0.1);
+  BOOST_CHECK_SMALL(network->feedForwardVector(in4)[0] - expv4[0], 0.1);
 }
