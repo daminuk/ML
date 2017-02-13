@@ -79,6 +79,7 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
 
     boost::numeric::ublas::vector<double> stepBack = boost::numeric::ublas::prod(boost::numeric::ublas::trans(weights[k]), delta.front());
 
+    // Apply the gradient of the activation function
     std::for_each(currZ.begin(), currZ.end(), [this] (double &val) {
       val = activation->gradient(val);
     });
@@ -96,6 +97,7 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
   }
 
   std::vector<boost::numeric::ublas::matrix<double> > Delta;
+  // Finally we use the above deltas to calculate the weight derivates.
   for (int k=0; k < delta.size(); ++k) {
     Delta.push_back(boost::numeric::ublas::outer_prod(delta[k], a[k]));
   }
