@@ -20,7 +20,7 @@ public:
   }
 };
 
-class Linear: public ActivationFunction {
+class LinearFunction: public ActivationFunction {
 public:
   double activation(const double input) {
     return input;

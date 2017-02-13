@@ -4,7 +4,7 @@ void StochasticGradientDescent::train(boost::numeric::ublas::vector<double> inpu
   auto derivative = network->backPropogateVector(input, expected);
   auto weights = network->getWeights();
 
-  // We now loop over the weights subtracting the derivative times the learning rate. 
+  // We now loop over the weights subtracting the derivative times the learning rate.
   for (int i = 0; i < weights.size(); ++i) {
     weights[i] = weights[i] - trainingRate*derivative[i];
   }

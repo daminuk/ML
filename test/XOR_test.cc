@@ -7,7 +7,10 @@
 
 BOOST_AUTO_TEST_CASE(XOR_test_feed_forward)
 {
-  /* We test if the feed forward implementation is working by using known weights.*/
+  /*
+   * We test if the feed forward implementation is working by using known
+   * weights for an XOR network.
+   */
   boost::numeric::ublas::vector<double> in1(2);
   in1[0] = 0.0;
   in1[1] = 0.0;
@@ -38,7 +41,7 @@ BOOST_AUTO_TEST_CASE(XOR_test_feed_forward)
 
   std::vector<int> size;
   size.push_back(2);
-  NeuralNetwork network(size, 2, 1);
+  NeuralNetwork network(size, 2, 1, new SigmoidFunction());
   network.initializeRandomWeights();
 
   auto weights = network.getWeights();
@@ -68,9 +71,10 @@ BOOST_AUTO_TEST_CASE(XOR_test_feed_forward)
 
 BOOST_AUTO_TEST_CASE(XOR_test_train)
 {
-  /* We test if the back propogation implementation by using stochastic gradient descent
+  /*
+   * We test if the back propogation implementation by using stochastic gradient descent
    * to learn the weights for an XOR network.
-   * 
+   *
    * This test may fail if poor initial conditions are randomly selected.
    */
 
@@ -104,19 +108,19 @@ BOOST_AUTO_TEST_CASE(XOR_test_train)
 
   std::vector<int> size;
   size.push_back(2);
-  NeuralNetwork * network = new NeuralNetwork(size, 2, 1);
+  std::unique_ptr<NeuralNetwork> network(new NeuralNetwork(size, 2, 1, new SigmoidFunction()));
   network->initializeRandomWeights();
 
-  StochasticGradientDescent SGD(network, 0.1);
+  StochasticGradientDescent SGD(network.get(), 0.1);
 
   // We train the network using the above pairs of inputs and expected values.
   // Note: A criteria for halting the optimization is still needed.
   for (int i=0; i < 20000; ++i) {
-	SGD.train(in1, expv1);
-	SGD.train(in2, expv2);
-	SGD.train(in3, expv3);
-	SGD.train(in4, expv4);
-  }  
+	   SGD.train(in1, expv1);
+	   SGD.train(in2, expv2);
+	   SGD.train(in3, expv3);
+	   SGD.train(in4, expv4);
+  }
 
   std::cout << "Output: " << network->feedForwardVector(in1)[0] << " Expected: " << expv1[0] << std::endl;
   std::cout << "Output: " << network->feedForwardVector(in2)[0] << " Expected: " << expv2[0] << std::endl;

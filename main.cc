@@ -7,7 +7,7 @@ int main() {
   size.push_back(5);
   size.push_back(10);
 
-  NeuralNetwork network(size, 5, 5);
+  NeuralNetwork network(size, 5, 5, new SigmoidFunction());
   network.initializeRandomWeights();
 
   boost::numeric::ublas::vector<double> tmp(5);

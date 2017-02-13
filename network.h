@@ -8,19 +8,20 @@
 #include <chrono>
 #include <deque>
 #include <vector>
+#include <memory>
 
 class NeuralNetwork {
 private:
   int numberInput; // Number of input neurons
   int numberOutput; // Number of output neurons
   std::vector<boost::numeric::ublas::matrix <double> > weights;
-  ActivationFunction * activation;
+  std::unique_ptr<ActivationFunction> activation;
 
 public:
-  NeuralNetwork(std::vector<int> layerSize, int input, int output) {
+  NeuralNetwork(std::vector<int> layerSize, int input, int output, ActivationFunction* active) {
     numberOutput = output;
     numberInput = input;
-    activation = new SigmoidFunction();
+    activation = std::unique_ptr<ActivationFunction>(active);
 
     // Add input weights
     weights.push_back(boost::numeric::ublas::matrix<double>(layerSize[0], input + 1));
@@ -38,10 +39,6 @@ public:
   boost::numeric::ublas::vector<double> feedForwardVector(boost::numeric::ublas::vector<double> input);
   std::vector<boost::numeric::ublas::matrix<double> > backPropogateVector(boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected);
   boost::numeric::ublas::vector<double> addBiasUnit(boost::numeric::ublas::vector<double> input);
-
-  ~NeuralNetwork() {
-    delete activation;
-  }
 
   std::vector<boost::numeric::ublas::matrix<double> > getWeights() {
     return weights;
