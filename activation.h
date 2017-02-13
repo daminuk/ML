@@ -1,4 +1,7 @@
-#include<cmath>
+#ifndef ACTIVATION_H_
+#define ACTIVATION_H_
+
+#include <cmath>
 
 class ActivationFunction {
 public:
@@ -16,3 +19,15 @@ public:
     return activation(input)*(1.0-activation(input));
   }
 };
+
+class Linear: public ActivationFunction {
+public:
+  double activation(const double input) {
+    return input;
+  }
+
+  double gradient(const double input) {
+    return 1.0;
+  }
+};
+#endif

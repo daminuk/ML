@@ -1,3 +1,6 @@
+#ifndef NETWORK_H_
+#define NETWORK_H_
+
 #include "activation.h"
 #include <boost/numeric/ublas/matrix.hpp>
 #include <boost/numeric/ublas/io.hpp>
@@ -29,13 +32,24 @@ public:
 
     // Add output weights
     weights.push_back(boost::numeric::ublas::matrix<double>(output, layerSize[layerSize.size() - 1] + 1));
-
-    std::cout << "Size of weights vector: " << weights.size() << std::endl;
   }
 
   void initializeRandomWeights(double epsilon = 0.12);
   boost::numeric::ublas::vector<double> feedForwardVector(boost::numeric::ublas::vector<double> input);
   std::vector<boost::numeric::ublas::matrix<double> > backPropogateVector(boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected);
+  boost::numeric::ublas::vector<double> addBiasUnit(boost::numeric::ublas::vector<double> input);
+
+  ~NeuralNetwork() {
+    delete activation;
+  }
+
+  std::vector<boost::numeric::ublas::matrix<double> > getWeights() {
+    return weights;
+  }
+
+  void setWeights(std::vector<boost::numeric::ublas::matrix<double> > newWeights) {
+    weights = newWeights;
+  }
 
   int getInputSize() {
     return numberInput;
@@ -44,4 +58,8 @@ public:
   int getOutputSize() {
     return numberOutput;
   }
+
+
 };
+
+#endif
