@@ -18,7 +18,7 @@ private:
   std::unique_ptr<ActivationFunction> activation;
 
 public:
-  NeuralNetwork(std::vector<int> layerSize, int input, int output, ActivationFunction* active) {
+  NeuralNetwork(const std::vector<int> layerSize, const int input, const int output, ActivationFunction* active) {
     numberOutput = output;
     numberInput = input;
     activation = std::unique_ptr<ActivationFunction>(active);
@@ -35,16 +35,18 @@ public:
     weights.push_back(boost::numeric::ublas::matrix<double>(output, layerSize[layerSize.size() - 1] + 1));
   }
 
-  void initializeRandomWeights(double epsilon = 0.12);
-  boost::numeric::ublas::vector<double> feedForwardVector(boost::numeric::ublas::vector<double> input);
-  std::vector<boost::numeric::ublas::matrix<double> > backPropogateVector(boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected);
-  boost::numeric::ublas::vector<double> addBiasUnit(boost::numeric::ublas::vector<double> input);
+  boost::numeric::ublas::vector<double> feedForwardVector(const boost::numeric::ublas::vector<double> input);
+  std::vector<boost::numeric::ublas::matrix<double> > backPropogateVector(const boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected);
+  boost::numeric::ublas::vector<double> addBiasUnit(const boost::numeric::ublas::vector<double> input);
+
+  void initializeRandomWeights(const double epsilon = 0.12);
+  double costVector(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected);
 
   std::vector<boost::numeric::ublas::matrix<double> > getWeights() {
     return weights;
   }
 
-  void setWeights(std::vector<boost::numeric::ublas::matrix<double> > newWeights) {
+  void setWeights(const std::vector<boost::numeric::ublas::matrix<double> > newWeights) {
     weights = newWeights;
   }
 

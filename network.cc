@@ -1,9 +1,9 @@
 #include "network.h"
 
-boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(boost::numeric::ublas::vector<double> input) {
+boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(const boost::numeric::ublas::vector<double> input) {
   // Given an input vector feed it through the neural network returning the produced output.
 
-  // If the input size does not match the exepected size we return an empty vector.
+  // If the input size does not match the expected size we return an empty vector.
   if (input.size() != numberInput) {
     return boost::numeric::ublas::vector<double>();
   }
@@ -33,7 +33,7 @@ boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(boost::nu
   return current;
 }
 
-std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogateVector(boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected) {
+std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogateVector(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected) {
   // This function calculate the gradient of the cost function w.r.t network weights using the back propogation algorithm.
 
   // If the input size or output size does not match the networks return an empty vector
@@ -109,7 +109,7 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
   return Delta;
 }
 
-boost::numeric::ublas::vector<double> NeuralNetwork::addBiasUnit(boost::numeric::ublas::vector<double> input) {
+boost::numeric::ublas::vector<double> NeuralNetwork::addBiasUnit(const boost::numeric::ublas::vector<double> input) {
   // Add an element with value one to the start of a vector
   boost::numeric::ublas::vector<double> tmp(input.size() + 1);
 
@@ -121,7 +121,7 @@ boost::numeric::ublas::vector<double> NeuralNetwork::addBiasUnit(boost::numeric:
   return tmp;
 }
 
-void NeuralNetwork::initializeRandomWeights(double epsilon) {
+void NeuralNetwork::initializeRandomWeights(const double epsilon) {
   // Initialize a normal distribution generator and
   // construct a trivial random generator engine from a time-based seed:
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -133,4 +133,16 @@ void NeuralNetwork::initializeRandomWeights(double epsilon) {
         for (int j = 0; j < w.size2(); ++j)
             w(i, j) = distribution(generator);
   }
+}
+
+double NeuralNetwork::costVector(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected) {
+    /* Return the unregularized cost function for a sinle example. */
+    auto output = feedForwardVector(input);
+
+    double J = 0.0;
+    for (int i = 0; i < output.size(); ++i) {
+      J += expected[i]*log(output[i]) +  (1 - expected[i])*log(1 - output[i]);
+    }
+
+    return -J;
 }

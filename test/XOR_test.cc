@@ -72,7 +72,7 @@ BOOST_AUTO_TEST_CASE(XOR_test_feed_forward)
 BOOST_AUTO_TEST_CASE(XOR_test_train)
 {
   /*
-   * We test if the back propogation implementation by using stochastic gradient descent
+   * We test the back propogation implementation by using stochastic gradient descent
    * to learn the weights for an XOR network.
    *
    * This test may fail if poor initial conditions are randomly selected.
@@ -116,10 +116,14 @@ BOOST_AUTO_TEST_CASE(XOR_test_train)
   // We train the network using the above pairs of inputs and expected values.
   // Note: A criteria for halting the optimization is still needed.
   for (int i=0; i < 20000; ++i) {
-	   SGD.train(in1, expv1);
-	   SGD.train(in2, expv2);
-	   SGD.train(in3, expv3);
-	   SGD.train(in4, expv4);
+    if (i % 100 == 0) {
+    	std::cout << "J=" << network->costVector(in1, expv1) << std::endl;
+    }
+ 
+    SGD.train(in1, expv1);
+    SGD.train(in2, expv2);
+    SGD.train(in3, expv3);
+    SGD.train(in4, expv4);
   }
 
   std::cout << "Output: " << network->feedForwardVector(in1)[0] << " Expected: " << expv1[0] << std::endl;

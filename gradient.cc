@@ -1,6 +1,6 @@
 #include "gradient.h"
 
-void StochasticGradientDescent::train(boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected) {
+void StochasticGradientDescent::train(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected) {
   auto derivative = network->backPropogateVector(input, expected);
   auto weights = network->getWeights();
 

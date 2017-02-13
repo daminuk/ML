@@ -16,7 +16,7 @@ public:
     trainingRate = rate;
   }
 
-  void train(boost::numeric::ublas::vector<double> input, boost::numeric::ublas::vector<double> expected);
+  void train(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected);
 };
 
 #endif
