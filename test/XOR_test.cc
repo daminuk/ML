@@ -78,33 +78,44 @@ BOOST_AUTO_TEST_CASE(XOR_test_train)
    * This test may fail if poor initial conditions are randomly selected.
    */
 
+  std::vector<boost::numeric::ublas::vector<double> > input;
+  std::vector<boost::numeric::ublas::vector<double> > expected;
+
   boost::numeric::ublas::vector<double> in1(2);
   in1[0] = 0.0;
   in1[1] = 0.0;
+  input.push_back(in1);
 
   boost::numeric::ublas::vector<double> expv1(1);
   expv1[0] = 0.0;
+  expected.push_back(expv1);
 
   boost::numeric::ublas::vector<double> in2(2);
   in2[0] = 0.0;
   in2[1] = 1.0;
+  input.push_back(in2);
 
   boost::numeric::ublas::vector<double> expv2(1);
   expv2[0] = 1.0;
+  expected.push_back(expv2);
 
   boost::numeric::ublas::vector<double> in3(2);
   in3[0] = 1.0;
   in3[1] = 0.0;
+  input.push_back(in3);
 
   boost::numeric::ublas::vector<double> expv3(1);
   expv3[0] = 1.0;
+  expected.push_back(expv3);
 
   boost::numeric::ublas::vector<double> in4(2);
   in4[0] = 1.0;
   in4[1] = 1.0;
+  input.push_back(in4);
 
   boost::numeric::ublas::vector<double> expv4(1);
   expv4[0] = 0.0;
+  expected.push_back(expv4);
 
   std::vector<int> size;
   size.push_back(2);
@@ -117,9 +128,9 @@ BOOST_AUTO_TEST_CASE(XOR_test_train)
   // Note: A criteria for halting the optimization is still needed.
   for (int i=0; i < 20000; ++i) {
     if (i % 100 == 0) {
-    	std::cout << "J=" << network->costVector(in1, expv1) << std::endl;
+    	std::cout << "J=" << network->cost(input, expected) << std::endl;
     }
- 
+
     SGD.train(in1, expv1);
     SGD.train(in2, expv2);
     SGD.train(in3, expv3);

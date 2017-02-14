@@ -1,7 +1,10 @@
 #include "network.h"
 
 boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(const boost::numeric::ublas::vector<double> input) {
-  // Given an input vector feed it through the neural network returning the produced output.
+  /*
+   * Given an input vector pass it through the neural network
+   * returning the produced output.
+   */
 
   // If the input size does not match the expected size we return an empty vector.
   if (input.size() != numberInput) {
@@ -13,7 +16,7 @@ boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(const boo
   for (auto w : weights) {
     boost::numeric::ublas::vector<double> tmp(w.size1());
 
-    // We manually include the bias unit to avoid resizing a vector.
+    // We manually include the bias unit to avoid vector resizing.
     for (int i = 0; i < w.size1(); ++i) {
       // Add bias unit
       tmp[i] = 1.0 * w(i, 0);
@@ -34,7 +37,10 @@ boost::numeric::ublas::vector<double> NeuralNetwork::feedForwardVector(const boo
 }
 
 std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogateVector(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected) {
-  // This function calculate the gradient of the cost function w.r.t network weights using the back propogation algorithm.
+  /*
+   * This function calculates the gradient of the cost function w.r.t
+   * network weights using the back propogation algorithm.
+   */
 
   // If the input size or output size does not match the networks return an empty vector
   if (input.size() != numberInput ||  expected.size() != numberOutput) {
@@ -50,7 +56,7 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
   for (auto w : weights) {
     boost::numeric::ublas::vector<double> tmp(w.size1());
 
-    // We manually include the bias unit so we don't need to resize a vector.
+    // We manually include the bias unit to avoid vector resizing
     for (int i = 0; i < w.size1(); ++i) {
       // Add bias unit
       tmp[i] = 1.0 * w(i, 0);
@@ -110,7 +116,9 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
 }
 
 boost::numeric::ublas::vector<double> NeuralNetwork::addBiasUnit(const boost::numeric::ublas::vector<double> input) {
-  // Add an element with value one to the start of a vector
+  /*
+   * Add Bias unit to vector
+   */
   boost::numeric::ublas::vector<double> tmp(input.size() + 1);
 
   tmp[0] = 1.0;
@@ -122,8 +130,9 @@ boost::numeric::ublas::vector<double> NeuralNetwork::addBiasUnit(const boost::nu
 }
 
 void NeuralNetwork::initializeRandomWeights(const double epsilon) {
-  // Initialize a normal distribution generator and
-  // construct a trivial random generator engine from a time-based seed:
+  /* Initialize a normal distribution generator and
+   *  construct a trivial random generator engine from a time-based seed:
+   */
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator (seed);
   std::normal_distribution<double> distribution(epsilon, 2.0 * epsilon);
@@ -135,14 +144,19 @@ void NeuralNetwork::initializeRandomWeights(const double epsilon) {
   }
 }
 
-double NeuralNetwork::costVector(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected) {
-    /* Return the unregularized cost function for a sinle example. */
-    auto output = feedForwardVector(input);
-
+double NeuralNetwork::cost(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected) {
+    /*
+     * Calculate the unregularized cost function.
+     */
     double J = 0.0;
-    for (int i = 0; i < output.size(); ++i) {
-      J += expected[i]*log(output[i]) +  (1 - expected[i])*log(1 - output[i]);
+
+    for (int k = 0; k < input.size(); k++) {
+      auto output = feedForwardVector(input[k]);
+
+      for (int i = 0; i < output.size(); ++i) {
+        J += expected[k][i]*log(output[i]) +  (1 - expected[k][i])*log(1 - output[i]);
+      }
     }
 
-    return -J;
+    return (-J/input.size());
 }

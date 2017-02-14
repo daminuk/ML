@@ -40,7 +40,7 @@ public:
   boost::numeric::ublas::vector<double> addBiasUnit(const boost::numeric::ublas::vector<double> input);
 
   void initializeRandomWeights(const double epsilon = 0.12);
-  double costVector(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected);
+  double cost(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected);
 
   std::vector<boost::numeric::ublas::matrix<double> > getWeights() {
     return weights;
