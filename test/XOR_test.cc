@@ -122,20 +122,11 @@ BOOST_AUTO_TEST_CASE(XOR_test_train)
   std::unique_ptr<NeuralNetwork> network(new NeuralNetwork(size, 2, 1, new SigmoidFunction()));
   network->initializeRandomWeights();
 
-  StochasticGradientDescent SGD(network.get(), 0.1);
-
+  StochasticGradientDescent SGD(network.get(), 0.5);
   // We train the network using the above pairs of inputs and expected values.
-  // Note: A criteria for halting the optimization is still needed.
-  for (int i=0; i < 20000; ++i) {
-    if (i % 100 == 0) {
-    	std::cout << "J=" << network->cost(input, expected) << std::endl;
-    }
-
-    SGD.train(in1, expv1);
-    SGD.train(in2, expv2);
-    SGD.train(in3, expv3);
-    SGD.train(in4, expv4);
-  }
+  std::cout << "Before training J=" << network->cost(input, expected) << std::endl;
+  SGD.train(input, expected, 1e-2);
+  std::cout << "After training J=" << network->cost(input, expected) << std::endl;
 
   std::cout << "Output: " << network->feedForwardVector(in1)[0] << " Expected: " << expv1[0] << std::endl;
   std::cout << "Output: " << network->feedForwardVector(in2)[0] << " Expected: " << expv2[0] << std::endl;

@@ -102,7 +102,7 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
       tmp2[i-1] = stepBack[i];
     }
 
-    // Add the caculated delta to the front
+    // Add the caculated delta to the deque
     delta.push_front(tmp2);
   }
 
@@ -130,8 +130,9 @@ boost::numeric::ublas::vector<double> NeuralNetwork::addBiasUnit(const boost::nu
 }
 
 void NeuralNetwork::initializeRandomWeights(const double epsilon) {
-  /* Initialize a normal distribution generator and
-   *  construct a trivial random generator engine from a time-based seed:
+  /*
+   * Initialize a normal distribution generator and
+   * construct a trivial random generator engine from a time-based seed:
    */
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   std::default_random_engine generator (seed);

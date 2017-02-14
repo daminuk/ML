@@ -2,7 +2,7 @@
 #define GRADIENT_H_
 
 /*
- * A class which carries out stochastic gradient descent.
+ * A class which implements Stochastic Gradient Descent.
  */
 
  #include "network.h"
@@ -10,13 +10,15 @@
 class StochasticGradientDescent {
   NeuralNetwork * network;
   double trainingRate;
+  int maxItterations;
 public:
-  StochasticGradientDescent(NeuralNetwork * _net, double rate) {
+  StochasticGradientDescent(NeuralNetwork * _net, const double rate = 0.01, const int _max = 20000) {
     network = _net;
     trainingRate = rate;
+    maxItterations = _max;
   }
 
-  void train(const boost::numeric::ublas::vector<double> input, const boost::numeric::ublas::vector<double> expected);
+  void train(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected, const double minCost);
 };
 
 #endif
