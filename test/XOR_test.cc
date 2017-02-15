@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(XOR_test_train)
   StochasticGradientDescent SGD(network.get(), 0.5);
   // We train the network using the above pairs of inputs and expected values.
   std::cout << "Before training J=" << network->cost(input, expected) << std::endl;
-  SGD.train(input, expected, 1e-2);
+  SGD.train(input, expected, 1e-3, 2);
   std::cout << "After training J=" << network->cost(input, expected) << std::endl;
 
   std::cout << "Output: " << network->feedForwardVector(in1)[0] << " Expected: " << expv1[0] << std::endl;

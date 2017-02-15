@@ -6,6 +6,7 @@
  */
 
  #include "network.h"
+ #include <set>
 
 class StochasticGradientDescent {
   NeuralNetwork * network;
@@ -18,7 +19,7 @@ public:
     maxItterations = _max;
   }
 
-  void train(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected, const double minCost);
+  void train(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected, const double minCost, const int batchSize = 0);
 };
 
 #endif

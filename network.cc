@@ -102,7 +102,7 @@ std::vector<boost::numeric::ublas::matrix<double> > NeuralNetwork::backPropogate
       tmp2[i-1] = stepBack[i];
     }
 
-    // Add the caculated delta to the deque
+    // Add the calculated delta to the deque
     delta.push_front(tmp2);
   }
 

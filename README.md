@@ -1,2 +1,7 @@
 # ML
-A simple C++ implementation of a feedforward neural network.
+A simple C++ feedforward neural network implementation.
+
+## Dependencies
+
+BOOST uBLAS (linear algebra library)
+BOOST.TEST (unit testing)
