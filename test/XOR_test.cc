@@ -119,10 +119,11 @@ BOOST_AUTO_TEST_CASE(XOR_test_train)
 
   std::vector<int> size;
   size.push_back(2);
+
   std::unique_ptr<NeuralNetwork> network(new NeuralNetwork(size, 2, 1, new SigmoidFunction()));
   network->initializeRandomWeights();
 
-  StochasticGradientDescent SGD(network.get(), 0.5);
+  StochasticGradientDescent SGD(network.get(), 0.1);
   // We train the network using the above pairs of inputs and expected values.
   std::cout << "Before training J=" << network->cost(input, expected) << std::endl;
   SGD.train(input, expected, 1e-3, 2);
