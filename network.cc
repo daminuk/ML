@@ -122,10 +122,8 @@ boost::numeric::ublas::vector<double> NeuralNetwork::addBiasUnit(const boost::nu
   boost::numeric::ublas::vector<double> tmp(input.size() + 1);
 
   tmp[0] = 1.0;
-  for (int j=0; j < input.size(); j++) {
-      tmp[j+1] = input[j];
-  }
-
+  std::copy(input.begin(), input.end(), tmp.begin()+1);
+  
   return tmp;
 }
 
