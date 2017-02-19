@@ -18,11 +18,8 @@ private:
   std::unique_ptr<ActivationFunction> activation;
 
 public:
-  NeuralNetwork(const std::vector<int> layerSize, const int input, const int output, ActivationFunction* active) {
-    numberOutput = output;
-    numberInput = input;
-    activation = std::unique_ptr<ActivationFunction>(active);
-
+  NeuralNetwork(const std::vector<int> layerSize, const int input, const int output, ActivationFunction* active):
+    numberInput(input), numberOutput(output), activation(std::unique_ptr<ActivationFunction>(active)) {
     // Add input weights
     weights.push_back(boost::numeric::ublas::matrix<double>(layerSize[0], input + 1));
 

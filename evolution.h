@@ -11,12 +11,7 @@
 
 class EvolutionaryProgramming {
 private:
-  NeuralNetwork * network;
-  double maxValue;
-  double minValue;
-  int populationSize;
-  int fitnessEvaluations;
-
+  // Representation for each member of the population (contains the trained weights)
   struct Individual {
     std::vector<boost::numeric::ublas::matrix<double>> weights;
     std::vector<boost::numeric::ublas::matrix<double>> stepSize;
@@ -27,22 +22,27 @@ private:
                  wins(0) {}
   };
 
+  NeuralNetwork * network;
+  double maxValue;
+  double minValue;
+  int populationSize;
+  int fitnessEvaluations;
   std::vector<Individual> population;
   int dim;
   int opponentNumber;
 
+  void generatePopulation();
+  void spawnOffspring();
+  double evaluateFitness(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected);
+  void tournamentSelection();
+
 public:
-  EvolutionaryProgramming(NeuralNetwork * _net, double minVal, double maxVal, int popSize, int opNum = 10) {
-    network = _net;
-    minValue = minVal;
-    maxValue = maxVal;
-    populationSize = popSize;
-    opponentNumber = opNum;
-    fitnessEvaluations = 0;
+  EvolutionaryProgramming(NeuralNetwork * _net, double minVal, double maxVal, int popSize, int opNum = 10):
+      network(_net), minValue(minVal), maxValue(maxVal), populationSize(popSize), opponentNumber(opNum),
+      fitnessEvaluations(0), dim(0) {
 
     // Work out the dimensionality of the weights
     auto weights = network->getWeights();
-    dim = 0;
 
     for (auto w : weights) {
       for_each(w.begin1(), w.end1(), [this] (double &val) {
@@ -51,10 +51,6 @@ public:
     }
   }
 
-  void generatePopulation();
-  void spawnOffspring();
-  double evaluateFitness(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected);
-  void tournamentSelection();
   void train(const std::vector<boost::numeric::ublas::vector<double> > input, const std::vector<boost::numeric::ublas::vector<double> > expected, int maxFitnessEval = 100000);
 };
 

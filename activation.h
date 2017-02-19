@@ -7,6 +7,8 @@ class ActivationFunction {
 public:
   virtual double activation(const double input) = 0;
   virtual double gradient(const double input) = 0;
+
+  virtual ~ActivationFunction() {};
 };
 
 class SigmoidFunction: public ActivationFunction {
